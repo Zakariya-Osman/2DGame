@@ -15,8 +15,6 @@ public class KeyHandler implements KeyListener {
     
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     
-    public boolean upRight, downRight, leftDown, leftup;
-
     @Override
     public void keyTyped(KeyEvent e) {
         
@@ -25,18 +23,6 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W && code == KeyEvent.VK_D){
-            upRight = true;
-        }
-        if (code == KeyEvent.VK_D && code == KeyEvent.VK_S){
-            downRight = true;
-        }
-        if (code == KeyEvent.VK_S && code == KeyEvent.VK_A){
-            leftDown = true;
-        }
-        if (code == KeyEvent.VK_A && code == KeyEvent.VK_W){
-            leftup = true;
-        }
         if (code == KeyEvent.VK_W){
             upPressed = true;
             
@@ -60,18 +46,7 @@ public class KeyHandler implements KeyListener {
     public void keyReleased(KeyEvent e) {
         
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W && code == KeyEvent.VK_D){
-            upRight = false;
-        }
-        if (code == KeyEvent.VK_D && code == KeyEvent.VK_S){
-            downRight = false;
-        }
-        if (code == KeyEvent.VK_S && code == KeyEvent.VK_A){
-            leftDown = false;
-        }
-        if (code == KeyEvent.VK_A && code == KeyEvent.VK_W){
-            leftup = false;
-        }
+
         if (code == KeyEvent.VK_W){
             upPressed = false;
             
