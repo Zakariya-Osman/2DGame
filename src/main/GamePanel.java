@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pkg2dgame;
+package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,8 @@ import java.awt.Graphics2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import entity.Player;
+import tile.TileManager;
 
 /**
  *
@@ -21,27 +23,29 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; //16x16 tile default size of any components 
     final int scale = 3;
     
-    final int tileSize = originalTileSize * scale; //48x48
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol; //768px
-    final int screenHeight = tileSize * maxScreenRow; //576px
+    public final int tileSize = originalTileSize * scale; //48x48
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
+    public final int screenWidth = tileSize * maxScreenCol; //768px
+    public final int screenHeight = tileSize * maxScreenRow; //576px
     
     //fps
-    int FPS = 120;
+    int FPS = 60;
     
+    TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
+    Player player = new Player(this,keyH);
     
     //set player defult position
     int playerx = 100;
     int playery = 100;
-    int playerSpeed = 4;
+    int playerSpeed = 20;
     
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.black);
+        this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);// what does this do?
@@ -57,6 +61,8 @@ public class GamePanel extends JPanel implements Runnable {
         
         double drawInterval = 1000000000/FPS; //0.01666666 sec will draw screen
         double nextDrawTime = System.nanoTime() + drawInterval;
+        long timer = 0;
+        int drawCount = 0;
         
         
         while(gameThread != null){
@@ -85,23 +91,14 @@ public class GamePanel extends JPanel implements Runnable {
                 Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+            drawCount++;
+            System.out.println(drawCount);
         
         
     }
     
     public void update(){
-        if (keyH.upPressed == true){
-            playery -= playerSpeed;
-        }
-        else if(keyH.downPressed == true){
-            playery += playerSpeed;
-        }
-        else if(keyH.leftPressed == true){
-            playerx -= playerSpeed;
-        }
-        else if(keyH.rightPressed == true){
-            playerx += playerSpeed;
-        }
+        player.update();
         
         
         
@@ -113,8 +110,9 @@ public class GamePanel extends JPanel implements Runnable {
         
         Graphics2D g2 = (Graphics2D)g;
         
-        g2.setColor(Color.white);
-        g2.fillRect(playerx, playery, tileSize, tileSize);
+        tileM.draw(g2);
+        player.draw(g2);
+        
         g2.dispose();
         
     }

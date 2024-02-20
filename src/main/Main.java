@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change window license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit window template
  */
-package pkg2dgame;
+package main;
 
 import javax.swing.JFrame;
 
