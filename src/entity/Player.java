@@ -6,6 +6,7 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -20,10 +21,18 @@ public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
+    
+    public final int screenX;
+    public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+        
+        screenX = gp.screenWidth/2 - (gp.tileSize/2);
+        screenY = gp.screenHeight/2 - (gp.tileSize/2);
+
+        solidArea = new Rectangle(8, 16, 1, 1);
 
         setDefaultValues();
         getPlayerImage();
@@ -31,8 +40,8 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
 
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 23;
+        worldY = gp.tileSize * 21;
         speed = 5;
         dirrection = "down";
     }
@@ -59,19 +68,28 @@ public class Player extends Entity {
 
         if (keyH.upPressed == true || keyH.downPressed == true
                 || keyH.leftPressed == true || keyH.rightPressed == true) {
-
             if (keyH.upPressed == true) {
                 dirrection = "up";
-                y -= speed;
             } else if (keyH.downPressed == true) {
                 dirrection = "down";
-                y += speed;
             } else if (keyH.leftPressed == true) {
                 dirrection = "left";
-                x -= speed;
             } else if (keyH.rightPressed == true) {
                 dirrection = "right";
-                x += speed;
+            }
+            
+            //check tile collision
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+            
+            //if collision is false player can move
+            if(collisionOn == false){
+                switch(dirrection){
+                    case "up": worldY -= speed; break;
+                    case "down": worldY += speed; break;
+                    case "left": worldX -= speed; break;
+                    case "right": worldX += speed; break;
+                }
             }
 
             spriteCounter++;
@@ -125,7 +143,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 //        g2.setColor(new Color(2,2,20));
 //        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
 
